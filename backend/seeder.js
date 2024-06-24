@@ -10,7 +10,7 @@ import connectDB from "./config/db.js";
 
 dotenv.config();
 
-await connectDB();
+connectDB();
 
 const importData = async () => {
   try {
@@ -19,7 +19,9 @@ const importData = async () => {
     await User.deleteMany();
 
     const createdUsers = await User.insertMany(users);
+
     const adminUser = createdUsers[0]._id;
+
     const sampleProducts = products.map((product) => {
       return { ...product, user: adminUser };
     });
@@ -50,13 +52,6 @@ const destroyData = async () => {
 
 if (process.argv[2] === "-d") {
   destroyData();
-}
-
-if (process.argv[2] === "-i") {
+} else {
   importData();
 }
-
-// Run the following command to import data:
-// node backend/seeder -i
-// Run the following command to destroy data:
-// node backend/seeder -d
